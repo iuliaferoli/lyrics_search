@@ -6,6 +6,7 @@ from pydantic import BaseModel
 import json
 
 app = FastAPI()
+# uvicorn interface:app --reload     
 
 class Song(BaseModel):
     name: str
