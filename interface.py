@@ -10,7 +10,7 @@ app = FastAPI()
 class Song(BaseModel):
     name: str
     artist: str
-    lyrics: str | None
+    lyrics: list | None
     id : int
 
     model_config = {
