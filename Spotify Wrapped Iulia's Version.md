@@ -75,6 +75,9 @@ However, we can go further by adding more metadata like time or location and loo
 
 ![](img/advanced.png)
 
+Comparing this to my acutal Wrapped - it seems the results were close enough, but maybe not entierly accurate. 
+![](img/wrapped.jpeg)
+
 Here we can see the listening time over the year (in weekly buckets), the locations I've been listening from while traveling, and how my top artists have varied month by month (including a sighting of brat girl summer).
 And this is only scratching the surface; I can already imagine for certain artists it would be interesting to look at different angles like Top album (or era). 
 
