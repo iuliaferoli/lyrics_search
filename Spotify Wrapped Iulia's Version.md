@@ -1,4 +1,4 @@
-
+# Spotify Wrapped Iulia's Version.
 
 I am probably not the only one who was a little dissapointed by the Spotify Wrapped this year (and the internet seems to agrees). Looking back at our yearly musical history has become a highly anticipated moment of the year for heavy Spotify users. However, at the end of the day all "Wrapped" is, is a data analytics problem, with a great PR team. So perhaps the mantle must fall on fellow data analysis to attempt and solve this problem in a more satisfying way. 
 
