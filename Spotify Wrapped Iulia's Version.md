@@ -6,16 +6,16 @@ With the back-to-work and brand-new-year motivation fueling us - let's see if we
 
 ### Getting your listening data 
 
-The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data](https://support.spotify.com/uk/article/understanding-my-data/), which you can request out of your account settings.
-Once this has been generated we can dive into years worth of data and start building our own fun dashboards.
+The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link.](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings.
 
-![](img/spotify%20schema.png)
+Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](/define_music_list.ipynb) for the code eamples.
 
 Historical data will be generated as a list of JSON documents, each of them representing an action - in most cases a song that you've listened to with some additional metadata such as length of time in miliseconds, artist information, as well as device properties. Naturally, if you have any experience with Elastic, the first thought looking at this data would be that this data practically screams "add me to an index and search me!". So we will do just that.
 
 ### Building an Elasticsearch Index
 
-As you can see in [this notebook]() once we've connected to our preferred Elasticsearch client, it takes a few simple lines of code to send the json documents into a new index:
+As you can see in [the same notebook]() once we've connected to our preferred Elasticsearch client, it takes a few simple lines of code to send the json documents into a new index:
+
 ```python
 def generate_docs(DATASET_PATH):
     with open(DATASET_PATH, "r") as f:
@@ -71,15 +71,34 @@ Within a few hours we have Iulia's Version of Spotify Wrapped, going deeper than
 
 Starting with the "classic" wrapped insights - we can easily build the top artist and song rank.
 
-However, we can go further by adding more metadata like time or location and looking at how these trends have changed throughout the year. 
+Here's an example of how one of these graphs is built:
+
+![](img/top.png)
+
+Looking at the points of interest in this graph:
+* make sure to selecr the correct time interval for our data to cover 2024 in `1`
+* choose to show the `top values` of the artist name field, and exclude the `other` bucket to make our visualization neat in `2`
+* map this against the count of records to rank the artists based on how many times they appear in the data (equivalent to time the songs were played) in `3`
+
+
+However, we can go further by adding more metadata like time or location and looking at how these trends have changed throughout the year. Here we can see the listening time over the year (in weekly buckets), the locations I've been listening from while traveling, and how my top artists have varied month by month (including a sighting of brat girl summer).
 
 ![](img/advanced.png)
 
-Comparing this to my acutal Wrapped - it seems the results were close enough, but maybe not entierly accurate. 
+
+![](/img/time.png)
+
+Some more tricks worth noting for these graphs:
+* When we work with the playing time instead of just count of records, we choose to aggregate all the instances of a song or artist being played by using the `sum` function. This is kibana equivalend to the `aggs` opertor we were using in the code in the first [notebook](/define_music_list.ipynb) examples.
+* You can additionaly convert the milisecond into minutes or hours for neater visualiation
+* Finally we add the `top 3 artists name` as an additional breakdown in this graph
+
+
+Comparing this to my acutal Wrapped - it seems the results were close enough, but maybe not entierly accurate. It seems this year the top song choices are a little off from the way I calculate my ranking in this example. It could be that Spotify used a different formula to build this ranking, which makes it a bit harder to interpret. Thats's one of the benefits of building this dashboard from scratch - you have full transparancy on the type of aggregations and scoring used for your insights.
+
 ![](img/wrapped.jpeg)
 
-Here we can see the listening time over the year (in weekly buckets), the locations I've been listening from while traveling, and how my top artists have varied month by month (including a sighting of brat girl summer).
-And this is only scratching the surface; I can already imagine for certain artists it would be interesting to look at different angles like Top album (or era). 
+And this is only scratching the surface of possible visualizations; I can already imagine for certain artists it would be interesting to look at different angles like Top album (or era). 
 
 ![](img/album.png)
 
