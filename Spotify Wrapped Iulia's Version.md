@@ -1,28 +1,28 @@
 # Spotify Wrapped Iulia's Version.
 
-I am probably not the only one who was a little dissapointed by the Spotify Wrapped this year (and the internet seems to agree). Looking back at our yearly musical history has become a highly anticipated moment of the year for heavy Spotify users. However, at the end of the day all "Wrapped" is, is a data analytics problem, with a great PR team. So perhaps the mantle must fall on fellow data analysts to attempt to solve this problem in a more satisfying way. 
+I am probably not the only one who was a little disapointed by the Spotify Wrapped this year (and the internet seems to agree). Looking back at our yearly musical history has become a highly anticipated moment of the year for heavy Spotify users. However, at the end of the day all "Wrapped" is, is a data analytics problem, with a great PR team. So perhaps the mantle must fall on fellow data analysts to attempt to solve this problem in a more satisfying way. 
 
 With the back-to-work and brand-new-year motivation fueling us - let's see if we can do any better. (spoiler alert: definitely!)
 
 ### What you need to get started
 
-The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link.](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings. If you want to generate your own version of this dashboard - request your own data to run this example through! Please note, that this could take a few days to a few weeks but should take no longer than 30 days. You will need to confirm that you would like this data and a copy will be sent to your email directly.
+The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings. If you want to generate your own version of this dashboard - request your own data to run this example through! Please note, that this could take a few days to a few weeks but should take no longer than 30 days. You will need to confirm that you would like this data and a copy will be sent to your email directly.
 
 
 Alternatively, you can try it out first on [the sample data](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/data/sample_data.json) I've provided with a reduced sub-section from my own data.
 
 Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) for the code examples. 
-These were built and run using elasticsearch 8.15 and python 3.11.
+These were built and run using Elasticsearch 8.15 and Python 3.11.
 
 To get started with this notebook be sure to first clone the repository and download the required packages:
 
 ```pip install -r requirements.txt ```
 
-Historical data will be generated as a list of JSON documents pre-formatted and chunked by Spotify, where each json represents an action. In most cases such an aciton means a song that you've listened to with some additional metadata such as length of time in milliseconds, artist information, as well as device properties. Naturally, if you have any experience with Elastic, the first thought looking at this data would be that this data practically screams "add me to an index and search me!". So we will do just that.
+Historical data will be generated as a list of JSON documents pre-formatted and chunked by Spotify, where each json represents an action. In most cases such an action means a song that you've listened to with some additional metadata such as length of time in milliseconds, artist information, as well as device properties. Naturally, if you have any experience with Elastic, the first thought looking at this data would be that this data practically screams "add me to an index and search me!". So we will do just that.
 
 ### Building an Elasticsearch Index
 
-As you can see in [the same notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) once you've connected to your preferred Elasticsearch client (in my case python, but any language client could be used), it takes a few simple lines of code to send the json documents into a new index:
+As you can see in [the same notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) once you've connected to your preferred Elasticsearch client (in my case Python, but any language client could be used), it takes a few simple lines of code to send the json documents into a new index:
 
 
 ```python
@@ -58,14 +58,14 @@ for hit in response["hits"]["hits"]:
     print(hit['_source']["master_metadata_track_name"])
 ```
 
-This gives me back 5653 hits - which means I've played more than 5 thousand Hozier songs since 2015 (as far as my data goes back). Seems pretty accurate. You can run the same test, or query any of the other fields like `album name` or `song title` with a simple text match query. 
+This gives me back 5653 hits - which means I've played more than five thousand Hozier songs since 2015 (as far as my data goes back). Seems pretty accurate. You can run the same test, or query any of the other fields like `album name` or `song title` with a simple text match query. 
 
 The next steps in [the notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) are to build more complex queries, like the most anticipated question - is my top artist list in Wrapped accurate? 
 
 You can calculate this by either number of hits (how many times songs have been played) or perhaps more accurately, by summing up the total number of milliseconds of playtime by artist bucket.
 ![](img/code%20query.png)
 
-[You can read more about aggregations in elasticsearch here.](https://opster.com/guides/elasticsearch/search-apis/elasticsearch-filter-aggregation/) 
+[You can read more about aggregations in Elasticsearch here.](https://opster.com/guides/elasticsearch/search-apis/elasticsearch-filter-aggregation/) 
 
 ### Building Dashboards
 
@@ -102,7 +102,7 @@ Some more tricks worth noting for these graphs:
 *you can layer as many field breakdowns as you want, like for example adding the `top 3 artists name` on top of the monthly aggregations. 
 
 
-Comparing my final dashboard to my acutal Wrapped - it seems the results were close enough, but maybe not entirely accurate. It seems this year the top song choices are a little off from the way I calculate my ranking in this example. It could be that Spotify used a different formula to build this ranking, which makes it a bit harder to interpret. That's one of the benefits of building this dashboard from scratch - you have full transparency on the type of aggregations and scoring used for your insights.
+Comparing my final dashboard to my actual Wrapped - it seems the results were close enough, but maybe not entirely accurate. It seems this year the top song choices are a little off from the way I calculate my ranking in this example. It could be that Spotify used a different formula to build this ranking, which makes it a bit harder to interpret. That's one of the benefits of building this dashboard from scratch - you have full transparency on the type of aggregations and scoring used for your insights.
 
 ![](img/wrapped.jpeg)
 
@@ -110,7 +110,7 @@ Finally, to really drive the point of the full customization benefit - I've had 
 
 ![](img/eli.png)
 
-This time I've highlighted the `albums` breakdown since it gives some cool "eras" insights' and added the "hours of playtime per album per month" - from which you can really pinpoint when Tortured Poets came out as an extra fun treat. 
+This time I've highlighted the `albums` breakdown since it gives some cool "Eras" insights' and added the "hours of playtime per album per month" - from which you can really pinpoint when Tortured Poets came out as an extra fun treat. 
 
 
 
