@@ -6,16 +6,19 @@ With the back-to-work and brand-new-year motivation fueling us - let's see if we
 
 ### What you need to get started
 
-The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link.](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings. If you want to generate your own version of this dashboard - request your own data to run this example through! Please note, that this could take a few days to a few weeks but should take no longer than 30 days. You will need to confirm that you would like this data and a copy will be sent to your email directly
+The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link.](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings. If you want to generate your own version of this dashboard - request your own data to run this example through! Please note, that this could take a few days to a few weeks but should take no longer than 30 days. You will need to confirm that you would like this data and a copy will be sent to your email directly.
 
 
 Alternatively, you can try it out first on [the sample data](/data/sample_data) I've provided with a reduced sub-section from my own data.
 
-Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](/define_music_list.ipynb) for the code examples. To get started with this notebook be sure to first clone the repository and download the required packages:
+Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](/define_music_list.ipynb) for the code examples. 
+These were built and run using elasticsearch 8.15 and python 3.11.
+
+To get started with this notebook be sure to first clone the repository and download the required packages:
 
 ```pip install -r requirements.txt ```
 
-Historical data will be generated as a list of JSON documents, each of them representing an action - in most cases a song that you've listened to with some additional metadata such as length of time in milliseconds, artist information, as well as device properties. Naturally, if you have any experience with Elastic, the first thought looking at this data would be that this data practically screams "add me to an index and search me!". So we will do just that.
+Historical data will be generated as a list of JSON documents pre-formatted and chunked by Spotify, where each json represents an action. In most cases such an aciton means a song that you've listened to with some additional metadata such as length of time in milliseconds, artist information, as well as device properties. Naturally, if you have any experience with Elastic, the first thought looking at this data would be that this data practically screams "add me to an index and search me!". So we will do just that.
 
 ### Building an Elasticsearch Index
 
@@ -32,7 +35,7 @@ def generate_docs(DATASET_PATH):
         load = helpers.bulk(client, documents, index=index_name)
 ```
 
-Even the mapping is handled automatically due to the high quality and consistency of the data as prepared by Spotify. One key element to pay attention to is to ensure fields like "Artist Name" are seen as `keywords` which will allow us to run more complex aggregations for our dashboards.
+Even the mapping is handled automatically by Elastic due to the high quality and consistency of the data as prepared by Spotify, so you do not need to define it when indexing. One key element to pay attention to is noticing fields like "Artist Name" are seen as `keywords` which will allow us to run more complex aggregations for our dashboards.
 
 ### Wrapping Queries
 
@@ -68,7 +71,7 @@ You can calculate this by either number of hits (how many times songs have been 
 
 After these few examples you should have a good understanding of the Elasticsearch mechanics you can use to drill into this data. However, to both save time and make the insights more consumable (and pretty) you can also build a lot of these insights directly in a [Kibana dashboard.](https://www.elastic.co/guide/en/kibana/current/create-a-dashboard-of-panels-with-web-server-data.html)
 
-In my case, I've run these in my cloud Elastic cluster but this can also be run locally. You first need to [build a data view](https://www.elastic.co/guide/en/serverless/current/data-views.html) from the index and then you can directly build visualizations by dragging the data fields and choosing view types. The best part is - you can really make it your own by choosing the visualization type, date range you want to explore, which fields to showcase, etc.  
+In my case, I've run these in my cloud Elastic cluster but this can also be run locally. You first need to [build a data view](https://www.elastic.co/guide/en/serverless/current/data-views.html) from the index and then you can directly build visualizations by dragging the data fields and choosing view types. The best part is - you can really make it your own by choosing the visualization type, date range you want to explore, which fields to showcase, etc. Just pick a visual and drag the needed fields into the graph. For most examples we will use `ts` (the time field) as a horizontal axis, and a combination of record counts or aggregations over the `song_name` or `artist_name` fields on the vertical axis.
 
 Within a few hours I built my own Spotify Wrapped - Iulia's Version, going deeper than ever before. Let's take a look.
 
