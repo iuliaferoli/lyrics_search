@@ -9,9 +9,9 @@ With the back-to-work and brand-new-year motivation fueling us - let's see if we
 The best part about this exercise is that it's fully replicable. Spotify allows users [to download their own historical streaming data via this link.](https://www.spotify.com/uk/account/privacy/), which you can request out of your account settings. If you want to generate your own version of this dashboard - request your own data to run this example through! Please note, that this could take a few days to a few weeks but should take no longer than 30 days. You will need to confirm that you would like this data and a copy will be sent to your email directly.
 
 
-Alternatively, you can try it out first on [the sample data](/data/sample_data) I've provided with a reduced sub-section from my own data.
+Alternatively, you can try it out first on [the sample data](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/data/sample_data.json) I've provided with a reduced sub-section from my own data.
 
-Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](/define_music_list.ipynb) for the code examples. 
+Once this has been generated we can dive into years worth of data and start building our own fun dashboards. Check out [this notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) for the code examples. 
 These were built and run using elasticsearch 8.15 and python 3.11.
 
 To get started with this notebook be sure to first clone the repository and download the required packages:
@@ -22,7 +22,7 @@ Historical data will be generated as a list of JSON documents pre-formatted and 
 
 ### Building an Elasticsearch Index
 
-As you can see in [the same notebook]() once you've connected to your preferred Elasticsearch client (in my case python, but any language client could be used), it takes a few simple lines of code to send the json documents into a new index:
+As you can see in [the same notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) once you've connected to your preferred Elasticsearch client (in my case python, but any language client could be used), it takes a few simple lines of code to send the json documents into a new index:
 
 
 ```python
@@ -60,7 +60,7 @@ for hit in response["hits"]["hits"]:
 
 This gives me back 5653 hits - which means I've played more than 5 thousand Hozier songs since 2015 (as far as my data goes back). Seems pretty accurate. You can run the same test, or query any of the other fields like `album name` or `song title` with a simple text match query. 
 
-The next steps in [the notebook](/define_music_list.ipynb) are to build more complex queries, like the most anticipated question - is my top artist list in Wrapped accurate? 
+The next steps in [the notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb) are to build more complex queries, like the most anticipated question - is my top artist list in Wrapped accurate? 
 
 You can calculate this by either number of hits (how many times songs have been played) or perhaps more accurately, by summing up the total number of milliseconds of playtime by artist bucket.
 ![](img/code%20query.png)
@@ -97,7 +97,7 @@ From here, I've gone even further by adding more metadata like time or location 
 ![](/img/time.png)
 
 Some more tricks worth noting for these graphs:
-* when you work with the playing time instead of just count of records, you should choose to aggregate all the instances of a song or artist being played by using the `sum` function. This is the kibana equivalent to the `aggs` operator we were using in the code in the first [notebook](/define_music_list.ipynb)  examples.
+* when you work with the playing time instead of just count of records, you should choose to aggregate all the instances of a song or artist being played by using the `sum` function. This is the kibana equivalent to the `aggs` operator we were using in the code in the first [notebook](https://github.com/elastic/elasticsearch-labs/blob/main/supporting-blog-content/spotify-wrapped-dashboard/building-your-own-spotify-wrapped.ipynb)  examples.
 * you can additionally convert the milliseconds into minutes or hours for neater visualisation
 *you can layer as many field breakdowns as you want, like for example adding the `top 3 artists name` on top of the monthly aggregations. 
 
